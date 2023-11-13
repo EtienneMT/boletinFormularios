@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Resultado del formulario</h1>
+
+<p>Formulario enviado con éxito.</p>
+<p>Fecha de Inicio: {{ form.cleaned_data.fecha_inicio }}</p>
+<p>Fecha de Fin: {{ form.cleaned_data.fecha_fin }}</p>
+<p>Días de la Semana Seleccionados:
+    {% for dia in form.cleaned_data.dias_semana %}
+        {{ dia }}
+        {% if not forloop.last %}
+            , {% endif %}
+    {% endfor %}</p>
+<p>Email: {{ form.cleaned_data.email }}</p>
+</body>
+</html>
