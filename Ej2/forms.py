@@ -1,5 +1,7 @@
 from django import forms
 import re
+from django.utils import timezone
+from datetime import timedelta
 
 
 def comprobar_requisitos(texto):
@@ -19,7 +21,7 @@ def comprobar_requisitos(texto):
 class FormularioNombreCont(forms.Form):
     username = forms.CharField(label='username')
     password = forms.CharField(label='password', widget=forms.PasswordInput, min_length=8)
-    fecha_acceso = forms.DateTimeField()
+    fecha_acceso = forms.DateTimeField(widget=forms.HiddenInput)
 
     def clean_password(self):
         username = self.cleaned_data.get('username')
@@ -31,5 +33,12 @@ class FormularioNombreCont(forms.Form):
         if not (comprobar_requisitos(password)):
             raise forms.ValidationError("""La contraseña tiene que contener una minuscula,
                                          una mayuscula, un numero y un caracter especial""")
-
         return password
+
+    def clean_fecha_acceso(self):
+        fecha_acceso = self.cleaned_data.get('fecha_acceso')
+
+        if fecha_acceso - timezone.now >= timedelta(minutes=2):
+            raise forms.ValidationError("Han pasado mas de dos minutos")
+
+        return fecha_acceso
